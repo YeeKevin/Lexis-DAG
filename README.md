@@ -1,11 +1,9 @@
 # Advanced Database Project: Lexis-DAG
-
-# Chu-Min Huang and Kevin Yee
+Chu-Min Huang and Kevin Yee
 Spring 2021
 
 ## Implementation of Lexis-DAG
 Following the paper, "Lexis: An Optimization Framework for Discovering the Hierarchical Structure of Sequential Data"
-
 
 ## Project Tasks
 - [] Acquire Datasets
