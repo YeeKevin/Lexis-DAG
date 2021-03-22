@@ -1,5 +1,6 @@
 # Advanced Database Project: Lexis-DAG
 Chu-Min Huang and Kevin Yee
+
 Spring 2021
 
 ## Implementation of Lexis-DAG
