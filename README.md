@@ -9,7 +9,7 @@ Following the paper, "Lexis: An Optimization Framework for Discovering the Hiera
 ## Project Tasks
 - [] Acquire Datasets
 	+ Use the same or similar data as in original paper
-	**Kevin Yee**
+	+ **Kevin Yee**
 - [] Plan out design of the program
 	+ A general blueprint for required functions and sections
 - [] Implement features
