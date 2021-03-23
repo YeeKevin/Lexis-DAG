@@ -7,7 +7,7 @@ Spring 2021
 Following the paper, "Lexis: An Optimization Framework for Discovering the Hierarchical Structure of Sequential Data"
 
 ## Project Tasks
-- [] Acquire Datasets
+- [x] Acquire Datasets
 	+ Use the same or similar data as in original paper
 	+ **Kevin Yee**
 - [] Plan out design of the program
