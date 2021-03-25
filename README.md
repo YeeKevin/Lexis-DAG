@@ -17,3 +17,22 @@ Following the paper, "Lexis: An Optimization Framework for Discovering the Hiera
 	+ Greedy Algorithm
 - [] Run Experiments
 	+ Check results against original data
+
+## Datasets
+
+uniprot-proteome UP000002311.fasta
+- Sequence of amino acids
+- Redundancy reduced by UniProt's Proteome Redundancy Detector
+- https://www.uniprot.org/uniprot/?query=proteome:UP000002311
+- As of January 2021
+- 6049 sequences
+
+UP000002311_559292.fasta
+- Sequence of amino acids
+- Same as previous set except that for each gene, a representative seqence is selected
+- 6049 sequences
+
+bakers-yeast-6130.fasta
+- From NCBI with search "Baker's Yeast" AND RefSeq filter enabled
+- Sequence of nucleotides
+- 6130 sequences
