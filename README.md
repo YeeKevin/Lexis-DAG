@@ -1,4 +1,4 @@
-# Advanced Database Project: Lexis-DAG
+# COP5725 Advanced Databases: Lexis-DAG
 Chu-Min Huang and Kevin Yee
 
 Spring 2021
@@ -17,6 +17,10 @@ Following the paper, "Lexis: An Optimization Framework for Discovering the Hiera
 	+ Greedy Algorithm
 - [] Run Experiments
 	+ Check results against original data
+
+## Set-Up
+Requries Bio-Python library
+https://biopython.org/wiki/Download
 
 ## Datasets
 
