@@ -33,24 +33,30 @@ V = 'V'					# valine
 B = 'B'					# special case: asparagine/aspartic acid
 Z = 'Z'					# special case: glutamine/glutamic acid
 
+acidArray = [A,R,N,D,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V,B,Z]
+
 # class to represent DAG objects
 class LexisDag:
 
 	def __init(self):
 		self.__target = EMPTY_STRING
-		self.__source = []
-		self.__intermediateNodes = []
+		self.__source = dict()
+		self.__intermediateNodes = dict()
 		self.__edgeCost = 0
 
 	# setters
 	def setTarget(self, target):
 		self.__target = target
+	def setSource(self, source):
+		self.__source = source
 	def setEdgeCost(self, edgeCost):
 		self.__edgeCost = edgeCost
 
 	# getters
 	def getTarget(self):
 		return self.__target
+	def getSource(self):
+		return self.__source
 	def getEdgeCost(self):
 		return self.__edgeCost
 
@@ -74,7 +80,7 @@ def main():
 	# work with first target
 	print(lexisDags[0].getTarget())
 	print(lexisDags[0].getEdgeCost())
-
+	print(lexisDags[0].getSource())
 
 def initializeNewDag(target, dagList):
 	newSequence = LexisDag()
@@ -83,9 +89,33 @@ def initializeNewDag(target, dagList):
 	dagList[len(dagList) - 1].setTarget(target)
 	# initial edge cost is length of target
 	dagList[len(dagList) - 1].setEdgeCost(len(dagList[len(dagList) - 1].getTarget()))
+	# current target
+	target = dagList[len(dagList) - 1].getTarget()
 
-
-	# TODO add in source
-
+	# set source nodes
+	value = [pos for pos, char in enumerate(target) if char == R]
+	dagList[len(dagList) - 1].setSource([{A : [pos for pos, char in enumerate(target) if char == A]},
+										{R : [pos for pos, char in enumerate(target) if char == R]},
+										{N : [pos for pos, char in enumerate(target) if char == N]},
+										{D : [pos for pos, char in enumerate(target) if char == D]},
+										{C : [pos for pos, char in enumerate(target) if char == C]},
+										{Q : [pos for pos, char in enumerate(target) if char == Q]},
+										{E : [pos for pos, char in enumerate(target) if char == E]},
+										{G : [pos for pos, char in enumerate(target) if char == G]},
+										{H : [pos for pos, char in enumerate(target) if char == H]},
+										{I : [pos for pos, char in enumerate(target) if char == I]},
+										{L : [pos for pos, char in enumerate(target) if char == L]},
+										{K : [pos for pos, char in enumerate(target) if char == K]},
+										{M : [pos for pos, char in enumerate(target) if char == M]},
+										{F : [pos for pos, char in enumerate(target) if char == F]},
+										{P : [pos for pos, char in enumerate(target) if char == P]},
+										{S : [pos for pos, char in enumerate(target) if char == S]},
+										{T : [pos for pos, char in enumerate(target) if char == T]},
+										{W : [pos for pos, char in enumerate(target) if char == W]},
+										{Y : [pos for pos, char in enumerate(target) if char == Y]},
+										{V : [pos for pos, char in enumerate(target) if char == V]},
+										{B : [pos for pos, char in enumerate(target) if char == B]},
+										{Z : [pos for pos, char in enumerate(target) if char == Z]},
+										])
 
 main()
