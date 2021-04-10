@@ -1,7 +1,8 @@
 # Lexis-DAG Generator
 # This program parses a fasta file and produces a Lexis-DAG for each target
 
-from Bio import SeqIO
+from Bio import SeqIO               # processing .fasta format
+from itertools import combinations  # enumerating substrings
 
 # Global constants
 MIN_OUT_DEGREE = 2      
@@ -85,6 +86,12 @@ def main():
 
     # work with first target
     print(lexisDags[0])
+    # all substrings
+    target = str(lexisDags[0].getTarget())
+
+    allSubstrings = repeatedSubstrings(target)
+    print("Substrings: " + str(allSubstrings))
+    print(len(str(allSubstrings)))
 
 # create new Lexis-Dag and append to dagList
 def initializeNewDag(target, dagList):
@@ -93,34 +100,47 @@ def initializeNewDag(target, dagList):
     # store target
     dagList[len(dagList) - 1].setTarget(target)
     # initial edge cost is length of target
-    dagList[len(dagList) - 1].setEdgeCost(len(dagList[len(dagList) - 1].getTarget()))
+    dagList[len(dagList) - 1].setEdgeCost(len(dagList[len(dagList) - 1].
+        getTarget()))
     # current target
     target = dagList[len(dagList) - 1].getTarget()
 
     # set source nodes
     value = [pos for pos, char in enumerate(target) if char == R]
-    dagList[len(dagList) - 1].setSource([{A : [pos for pos, char in enumerate(target) if char == A]},
-                                        {R : [pos for pos, char in enumerate(target) if char == R]},
-                                        {N : [pos for pos, char in enumerate(target) if char == N]},
-                                        {D : [pos for pos, char in enumerate(target) if char == D]},
-                                        {C : [pos for pos, char in enumerate(target) if char == C]},
-                                        {Q : [pos for pos, char in enumerate(target) if char == Q]},
-                                        {E : [pos for pos, char in enumerate(target) if char == E]},
-                                        {G : [pos for pos, char in enumerate(target) if char == G]},
-                                        {H : [pos for pos, char in enumerate(target) if char == H]},
-                                        {I : [pos for pos, char in enumerate(target) if char == I]},
-                                        {L : [pos for pos, char in enumerate(target) if char == L]},
-                                        {K : [pos for pos, char in enumerate(target) if char == K]},
-                                        {M : [pos for pos, char in enumerate(target) if char == M]},
-                                        {F : [pos for pos, char in enumerate(target) if char == F]},
-                                        {P : [pos for pos, char in enumerate(target) if char == P]},
-                                        {S : [pos for pos, char in enumerate(target) if char == S]},
-                                        {T : [pos for pos, char in enumerate(target) if char == T]},
-                                        {W : [pos for pos, char in enumerate(target) if char == W]},
-                                        {Y : [pos for pos, char in enumerate(target) if char == Y]},
-                                        {V : [pos for pos, char in enumerate(target) if char == V]},
-                                        {B : [pos for pos, char in enumerate(target) if char == B]},
-                                        {Z : [pos for pos, char in enumerate(target) if char == Z]},
-                                        ])
+    dagList[len(dagList) - 1].setSource(
+                  [{A : [pos for pos, char in enumerate(target) if char == A]},
+                   {R : [pos for pos, char in enumerate(target) if char == R]},
+                   {N : [pos for pos, char in enumerate(target) if char == N]},
+                   {D : [pos for pos, char in enumerate(target) if char == D]},
+                   {C : [pos for pos, char in enumerate(target) if char == C]},
+                   {Q : [pos for pos, char in enumerate(target) if char == Q]},
+                   {E : [pos for pos, char in enumerate(target) if char == E]},
+                   {G : [pos for pos, char in enumerate(target) if char == G]},
+                   {H : [pos for pos, char in enumerate(target) if char == H]},
+                   {I : [pos for pos, char in enumerate(target) if char == I]},
+                   {L : [pos for pos, char in enumerate(target) if char == L]},
+                   {K : [pos for pos, char in enumerate(target) if char == K]},
+                   {M : [pos for pos, char in enumerate(target) if char == M]},
+                   {F : [pos for pos, char in enumerate(target) if char == F]},
+                   {P : [pos for pos, char in enumerate(target) if char == P]},
+                   {S : [pos for pos, char in enumerate(target) if char == S]},
+                   {T : [pos for pos, char in enumerate(target) if char == T]},
+                   {W : [pos for pos, char in enumerate(target) if char == W]},
+                   {Y : [pos for pos, char in enumerate(target) if char == Y]},
+                   {V : [pos for pos, char in enumerate(target) if char == V]},
+                   {B : [pos for pos, char in enumerate(target) if char == B]},
+                   {Z : [pos for pos, char in enumerate(target) if char == Z]},
+                   ])
+
+# return list of repeated substrings of length >= 2
+def repeatedSubstrings(target):
+    allSubstrings = [target[x:y] for x, y in combinations(
+        range(len(target)+1), r = 2)]
+
+    #TODO remove substrings of length 1
+
+    #TODO remove non-repeated substrings
+
+    return str(allSubstrings)
 
 main()
