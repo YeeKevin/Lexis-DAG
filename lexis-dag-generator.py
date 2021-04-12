@@ -36,6 +36,9 @@ Z = 'Z'                 # special case: glutamine/glutamic acid
 
 acidArray = [A,R,N,D,C,Q,E,G,H,I,L,K,M,F,P,S,T,W,Y,V,B,Z]
 
+# set a variable for the best costed result
+bestSubList = []
+
 # class to represent DAG objects
 class LexisDag:
 
@@ -92,41 +95,11 @@ def main():
     allSubstrings = repeatedSubstrings(target)
     print("Substrings: " + str(allSubstrings))
     print(len(str(allSubstrings)))
-    target="abbbbbba"
-    Lt = len(target)
-    stemp = ""
-    ctemp = 0
-    result = 0
-    templist = []
-    maxstep = int(Lt/2) + 1
-    for step in range(2, maxstep):
-        # print(step)
-        for i in range(0, Lt):
-            if i+step == Lt+1:
-               break
-            sub = target[i: i+step]
-            templist.append(sub)
-            R = 0
-            # print(sub)
-            slen = 1
-            j = 0
-            while j < Lt:
-                sub2 = target[j: j+step]
-                if sub == sub2:
-                    R+=1
-                    slen = step
-                else:
-                    slen = 1
-                j+=slen
-            # print(R)
-            if R == 1:
-               continue
-            else:
-                if (R-1)*step > ctemp:
-                   stemp = sub
-                   ctemp = (R-1)*step
-    print("stemp:"+stemp)
-                # print(R)
+    
+    # set test dataset as paper did, can put any dataset string in it
+    getSubstrings("aabcaabdaabc", 0)
+    print(bestSubList)
+                
 # create new Lexis-Dag and append to dagList
 def initializeNewDag(target, dagList):
     newSequence = LexisDag()
@@ -177,4 +150,54 @@ def repeatedSubstrings(target):
 
     return str(allSubstrings)
 
+# function that set best costed(1st layer) as an index in order to find best costed(2nd to last layer)
+# paper target="aabcaabdaabc", best costed(1st layer) = "aab", continue to find if there is any best costed
+# therefore, find best the 2nd best costed(2nd layer = "aabc"
+def getSubstrings(target, index):
+    Lt = len(target)
+    # stemp = the best costed one
+    stemp = ""
+    ctemp = 0
+    result = 0
+    templist = []
+    maxstep = int(Lt/2) + 1
+    for step in range(2, maxstep):
+        for i in range(0, Lt):
+            if i+step == Lt+1:
+               break
+            sub = target[i: i+step]
+            templist.append(sub)
+            R = 0
+            slen = 1
+            j = 0
+            while j < Lt:
+                sub2 = target[j: j+step]
+                if sub == sub2:
+                    R+=1
+                    slen = step
+                else:
+                    slen = 1
+                j+=slen
+            if R == 1:
+               continue
+            else:
+                if (R-1)*step > ctemp:
+                   stemp = sub
+                   ctemp = (R-1)*step
+    if  stemp == "":
+        return bestSubList
+    else:
+        if index == 0:
+            bestSubList.append(stemp)
+        # if there is only one best costed substring, it will directly displayed
+        else:
+            t = stemp.replace(str(index-1), bestSubList[index-1])
+            bestSubList.append(t)
+        # "aab"(1st best costed) now is represented as index(0) in order to code easily, 
+        # so if there is one more layer for best costed, combining them here, 
+        # "0c" = "aab"(0) + "c". So, the final best costed one is "aabc".
+        target = target.replace(stemp, str(index))
+        index += 1
+        getSubstrings(target, index)
+        
 main()
