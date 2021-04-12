@@ -73,8 +73,8 @@ def main():
     lexisDags = []
     iterator = 0
 
-    #for seq_record in SeqIO.parse('dataset/UP000002311_559292.fasta', "fasta"):
-    for seq_record in SeqIO.parse('dataset\\UP000002311_559292.fasta', "fasta"):
+    for seq_record in SeqIO.parse('dataset/UP000002311_559292.fasta', "fasta"):
+    # for seq_record in SeqIO.parse('dataset\\UP000002311_559292.fasta', "fasta"):
         # print(seq_record.id)
 
         # store the first 1500 sequences
@@ -92,7 +92,41 @@ def main():
     allSubstrings = repeatedSubstrings(target)
     print("Substrings: " + str(allSubstrings))
     print(len(str(allSubstrings)))
-
+    target="abbbbbba"
+    Lt = len(target)
+    stemp = ""
+    ctemp = 0
+    result = 0
+    templist = []
+    maxstep = int(Lt/2) + 1
+    for step in range(2, maxstep):
+        # print(step)
+        for i in range(0, Lt):
+            if i+step == Lt+1:
+               break
+            sub = target[i: i+step]
+            templist.append(sub)
+            R = 0
+            # print(sub)
+            slen = 1
+            j = 0
+            while j < Lt:
+                sub2 = target[j: j+step]
+                if sub == sub2:
+                    R+=1
+                    slen = step
+                else:
+                    slen = 1
+                j+=slen
+            # print(R)
+            if R == 1:
+               continue
+            else:
+                if (R-1)*step > ctemp:
+                   stemp = sub
+                   ctemp = (R-1)*step
+    print("stemp:"+stemp)
+                # print(R)
 # create new Lexis-Dag and append to dagList
 def initializeNewDag(target, dagList):
     newSequence = LexisDag()
