@@ -91,14 +91,17 @@ def main():
     print(lexisDags[0])
     # all substrings
     target = str(lexisDags[0].getTarget())
+    source = lexisDags[0].getSource()
 
-    allSubstrings = repeatedSubstrings(target)
-    print("Substrings: " + str(allSubstrings))
-    print(len(str(allSubstrings)))
+    # allSubstrings = repeatedSubstrings(target)
+    # print("Substrings: " + str(allSubstrings))
+    # print(len(str(allSubstrings)))
     
     # set test dataset as paper did, can put any dataset string in it
-    getSubstrings("aabcaabdaabc", 0)
+    getSubstrings(target, 0)
     print(bestSubList)
+
+    createPrintedGraph(target, source)
                 
 # create new Lexis-Dag and append to dagList
 def initializeNewDag(target, dagList):
@@ -135,8 +138,8 @@ def initializeNewDag(target, dagList):
                    {W : [pos for pos, char in enumerate(target) if char == W]},
                    {Y : [pos for pos, char in enumerate(target) if char == Y]},
                    {V : [pos for pos, char in enumerate(target) if char == V]},
-                   {B : [pos for pos, char in enumerate(target) if char == B]},
-                   {Z : [pos for pos, char in enumerate(target) if char == Z]},
+                   # {B : [pos for pos, char in enumerate(target) if char == B]},
+                   # {Z : [pos for pos, char in enumerate(target) if char == Z]},
                    ])
 
 # return list of repeated substrings of length >= 2
@@ -199,5 +202,27 @@ def getSubstrings(target, index):
         target = target.replace(stemp, str(index))
         index += 1
         getSubstrings(target, index)
-        
+
+# create file for printing of graph
+# use command dot -Tpdf printedGraph.txt -o printedGraph.pdf
+def createPrintedGraph(target, source):
+
+    f = open("printedGraph.txt", "w")
+    # file prologue
+    f.write("digraph G {\n")
+
+    # iterate through source nodes
+    i = 0
+    for aminoAcid in source:
+        # print(str(aminoAcid))
+        currentKey = str(next(iter(aminoAcid)))
+        f.write("    " + currentKey +  "->" + target + "[label=\"" + 
+            str(aminoAcid[currentKey]) + "\"]"  + ";" + "\n")
+
+    # iterate through intermediate nodes
+
+    # file epilogue
+    f.write("}")
+    f.close()
+      
 main()
