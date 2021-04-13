@@ -100,8 +100,9 @@ def main():
     # set test dataset as paper did, can put any dataset string in it
     getSubstrings(target, 0)
     print(bestSubList)
+    print(longestSubstringHeuristic(bestSubList))
 
-    createPrintedGraph(target, source)
+    # createPrintedGraph(target, source)
                 
 # create new Lexis-Dag and append to dagList
 def initializeNewDag(target, dagList):
@@ -224,5 +225,11 @@ def createPrintedGraph(target, source):
     # file epilogue
     f.write("}")
     f.close()
-      
+
+# sort list from longest to shortest substrings
+def longestSubstringHeuristic(unsortedSubstrings):
+    sortedSubstrings = sorted(unsortedSubstrings, key=len, reverse=True)
+    # sortedSubstrings.reverse()
+    return sortedSubstrings
+
 main()
