@@ -101,6 +101,8 @@ def main():
     getSubstrings(target, 0)
     print(bestSubList)
     print(longestSubstringHeuristic(bestSubList))
+    savedCostList = calcSavedCost(bestSubList, target, [])
+    print(savedCostList)
 
     # createPrintedGraph(target, source)
                 
@@ -231,5 +233,22 @@ def longestSubstringHeuristic(unsortedSubstrings):
     sortedSubstrings = sorted(unsortedSubstrings, key=len, reverse=True)
     # sortedSubstrings.reverse()
     return sortedSubstrings
+
+# calculate savedCost for a list of substrings
+def calcSavedCost(bestSubList, target, intermediateNodes):
+    savedCostList = []
+    for substring in bestSubList:
+        substringOccurences = target.count(substring)
+        # print(substringOccurences)
+        for intNode in intermediateNodes:
+            if intNode.count(substring):
+                substringOccurences = substringOccurences 
+                + intNode.count(substring)
+        # savedCost is occurences multiplied by length of substring - 1
+        savedCost = substringOccurences * (len(substring) - 1)
+        savedCostList.append(savedCost)
+    # returns a parallel list of values
+    return savedCostList
+
 
 main()
