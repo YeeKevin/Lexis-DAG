@@ -128,7 +128,7 @@ def main():
     insertIntermediateNodes(lexisDags[0], sortedList, target)
 
     print(lexisDags[0].getIntermediateNodes())
-    print(lexisDags[0].getEdgeCost())
+    print("New Edge Cost: " + str(lexisDags[0].getEdgeCost()))
 
                 
 # create new Lexis-Dag and append to dagList
@@ -279,6 +279,8 @@ def insertIntermediateNodes(lexisDagObject, sortedList, target):
 
     # create node
     intList = []
+    # set initial int node set
+    lexisDagObject.setIntermediateNodes(intList)
 
     # pointing to target
     for node in sortedList:
@@ -293,8 +295,14 @@ def insertIntermediateNodes(lexisDagObject, sortedList, target):
         # update edge cost for DAG
         lexisDagObject.setEdgeCost(lexisDagObject.getEdgeCost() - difference)
 
-        # edge cost in other int ndoes
-        # otherIntNodes = lexisDagObject.getIntermediateNodes()
+        # edge cost in other int nodes
+        otherIntNodes = lexisDagObject.getIntermediateNodes()
+        # for otherNode in otherIntNodes:
+        #     print("othernode: " + str(otherNode))
+        #     # if substring is part of other int nodes
+        #         # update edges
+
+        #         # update edge cost
 
 
     # print(intList)
