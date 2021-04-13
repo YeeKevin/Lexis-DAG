@@ -3,6 +3,7 @@
 
 from Bio import SeqIO               # processing .fasta format
 from itertools import combinations  # enumerating substrings
+import re
 
 # Global constants
 MIN_OUT_DEGREE = 2      
@@ -53,6 +54,8 @@ class LexisDag:
         self.__target = target
     def setSource(self, source):
         self.__source = source
+    def setIntermediateNodes(self, intermediateNodes):
+        self.__intermediateNodes = intermediateNodes
     def setEdgeCost(self, edgeCost):
         self.__edgeCost = edgeCost
 
@@ -61,6 +64,8 @@ class LexisDag:
         return self.__target
     def getSource(self):
         return self.__source
+    def getIntermediateNodes(self):
+        return self.__intermediateNodes
     def getEdgeCost(self):
         return self.__edgeCost
         
@@ -100,9 +105,30 @@ def main():
     # set test dataset as paper did, can put any dataset string in it
     getSubstrings(target, 0)
     print(bestSubList)
-    print(longestSubstringHeuristic(bestSubList))
+
+    # longest substring for experiment
+    # print(longestSubstringHeuristic(bestSubList))
+
+    # Lexis-G
+    # parallel list of savedCost values
     savedCostList = calcSavedCost(bestSubList, target, [])
     print(savedCostList)
+
+    # sorting from most saved cost
+    zippedSubstrings = zip(savedCostList, bestSubList)
+    sortedZippedSubstrings = sorted(zippedSubstrings, reverse=True)
+    # print(sortedZippedSubstrings)
+
+    # substrings sorted from highest to lowest savedCost
+    sortedList = [element for _,element in sortedZippedSubstrings]
+    print(sortedList)
+
+    # TODO insert intermediate nodes
+    insertIntermediateNodes(lexisDags[0], sortedList, target)
+
+    print(lexisDags[0].getIntermediateNodes())
+    print(lexisDags[0].getEdgeCost())
+
 
     # createPrintedGraph(target, source)
                 
@@ -249,6 +275,39 @@ def calcSavedCost(bestSubList, target, intermediateNodes):
         savedCostList.append(savedCost)
     # returns a parallel list of values
     return savedCostList
+
+def insertIntermediateNodes(lexisDagObject, sortedList, target):
+
+    # create node
+    intList = []
+
+    # pointing to target
+    for node in sortedList:
+        occurences = [m.start() for m in re.finditer(node, target)]
+        entry = { node : occurences}
+        intList.append(entry)
+        # original edge cost of substring
+        originalCost = len(occurences) * (len(node))
+        # cost of adding the intermediate node
+        newCost = len(occurences) + (len(node))
+        difference = originalCost - newCost
+        # update edge cost for DAG
+        lexisDagObject.setEdgeCost(lexisDagObject.getEdgeCost() - difference)
+
+
+    # print(intList)
+    
+    # update edge cost (target)
+    # add edges to construct node as edges to the target
+
+    # udpate edge cost (current int nodes)
+
+
+    # TODO edges to other int nodes
+    lexisDagObject.setIntermediateNodes(intList)
+
+
+    return
 
 
 main()
