@@ -25,7 +25,7 @@ https://biopython.org/wiki/Download
 GraphViz for printing of graphs
 https://graphviz.org/download/
 Use command to print pdf of DAG:
-dot -Tpdf <filename> -o printedGraph.pdf
+dot -Tpdf filename -o printedGraph.pdf
 
 ## Datasets
 
