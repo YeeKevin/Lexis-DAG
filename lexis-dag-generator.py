@@ -97,6 +97,7 @@ def main():
     # all substrings
     target = str(lexisDags[0].getTarget())
     source = lexisDags[0].getSource()
+    createPrintedGraph(target, source, "initialGraph.txt")
 
     # allSubstrings = repeatedSubstrings(target)
     # print("Substrings: " + str(allSubstrings))
@@ -129,8 +130,6 @@ def main():
     print(lexisDags[0].getIntermediateNodes())
     print(lexisDags[0].getEdgeCost())
 
-
-    # createPrintedGraph(target, source)
                 
 # create new Lexis-Dag and append to dagList
 def initializeNewDag(target, dagList):
@@ -233,10 +232,10 @@ def getSubstrings(target, index):
         getSubstrings(target, index)
 
 # create file for printing of graph
-# use command dot -Tpdf printedGraph.txt -o printedGraph.pdf
-def createPrintedGraph(target, source):
+# use command dot -Tpdf initialGraph.txt -o initialGraph.pdf
+def createPrintedGraph(target, source, filename):
 
-    f = open("printedGraph.txt", "w")
+    f = open(filename, "w")
     # file prologue
     f.write("digraph G {\n")
 
@@ -293,6 +292,9 @@ def insertIntermediateNodes(lexisDagObject, sortedList, target):
         difference = originalCost - newCost
         # update edge cost for DAG
         lexisDagObject.setEdgeCost(lexisDagObject.getEdgeCost() - difference)
+
+        # edge cost in other int ndoes
+        # otherIntNodes = lexisDagObject.getIntermediateNodes()
 
 
     # print(intList)
