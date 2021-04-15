@@ -22,6 +22,11 @@ Following the paper, "Lexis: An Optimization Framework for Discovering the Hiera
 Requries Bio-Python library
 https://biopython.org/wiki/Download
 
+GraphViz for printing of graphs
+https://graphviz.org/download/
+Use command to print pdf of DAG:
+dot -Tpdf filename -o printedGraph.pdf
+
 ## Datasets
 
 uniprot-proteome UP000002311.fasta

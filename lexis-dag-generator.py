@@ -3,6 +3,7 @@
 
 from Bio import SeqIO               # processing .fasta format
 from itertools import combinations  # enumerating substrings
+import re
 
 # Global constants
 MIN_OUT_DEGREE = 2      
@@ -53,6 +54,8 @@ class LexisDag:
         self.__target = target
     def setSource(self, source):
         self.__source = source
+    def setIntermediateNodes(self, intermediateNodes):
+        self.__intermediateNodes = intermediateNodes
     def setEdgeCost(self, edgeCost):
         self.__edgeCost = edgeCost
 
@@ -61,6 +64,8 @@ class LexisDag:
         return self.__target
     def getSource(self):
         return self.__source
+    def getIntermediateNodes(self):
+        return self.__intermediateNodes
     def getEdgeCost(self):
         return self.__edgeCost
         
@@ -91,14 +96,40 @@ def main():
     print(lexisDags[0])
     # all substrings
     target = str(lexisDags[0].getTarget())
+    source = lexisDags[0].getSource()
+    createPrintedGraph(target, source, "initialGraph.txt")
 
-    allSubstrings = repeatedSubstrings(target)
-    print("Substrings: " + str(allSubstrings))
-    print(len(str(allSubstrings)))
+    # allSubstrings = repeatedSubstrings(target)
+    # print("Substrings: " + str(allSubstrings))
+    # print(len(str(allSubstrings)))
     
     # set test dataset as paper did, can put any dataset string in it
-    getSubstrings("aabcaabdaabc", 0)
+    getSubstrings(target, 0)
     print(bestSubList)
+
+    # longest substring for experiment
+    # print(longestSubstringHeuristic(bestSubList))
+
+    # Lexis-G
+    # parallel list of savedCost values
+    savedCostList = calcSavedCost(bestSubList, target, [])
+    print(savedCostList)
+
+    # sorting from most saved cost
+    zippedSubstrings = zip(savedCostList, bestSubList)
+    sortedZippedSubstrings = sorted(zippedSubstrings, reverse=True)
+    # print(sortedZippedSubstrings)
+
+    # substrings sorted from highest to lowest savedCost
+    sortedList = [element for _,element in sortedZippedSubstrings]
+    print(sortedList)
+
+    # TODO insert intermediate nodes
+    insertIntermediateNodes(lexisDags[0], sortedList, target)
+
+    print(lexisDags[0].getIntermediateNodes())
+    print("New Edge Cost: " + str(lexisDags[0].getEdgeCost()))
+
                 
 # create new Lexis-Dag and append to dagList
 def initializeNewDag(target, dagList):
@@ -135,8 +166,8 @@ def initializeNewDag(target, dagList):
                    {W : [pos for pos, char in enumerate(target) if char == W]},
                    {Y : [pos for pos, char in enumerate(target) if char == Y]},
                    {V : [pos for pos, char in enumerate(target) if char == V]},
-                   {B : [pos for pos, char in enumerate(target) if char == B]},
-                   {Z : [pos for pos, char in enumerate(target) if char == Z]},
+                   # {B : [pos for pos, char in enumerate(target) if char == B]},
+                   # {Z : [pos for pos, char in enumerate(target) if char == Z]},
                    ])
 
 # return list of repeated substrings of length >= 2
@@ -196,4 +227,94 @@ def getSubstrings(target, index):
         index += 1
         getSubstrings(target, index)
     
+
+# create file for printing of graph
+# use command dot -Tpdf initialGraph.txt -o initialGraph.pdf
+def createPrintedGraph(target, source, filename):
+
+    f = open(filename, "w")
+    # file prologue
+    f.write("digraph G {\n")
+
+    # iterate through source nodes
+    i = 0
+    for aminoAcid in source:
+        # print(str(aminoAcid))
+        currentKey = str(next(iter(aminoAcid)))
+        f.write("    " + currentKey +  "->" + target + "[label=\"" + 
+            str(aminoAcid[currentKey]) + "\"]"  + ";" + "\n")
+
+    # iterate through intermediate nodes
+
+    # file epilogue
+    f.write("}")
+    f.close()
+
+# sort list from longest to shortest substrings
+def longestSubstringHeuristic(unsortedSubstrings):
+    sortedSubstrings = sorted(unsortedSubstrings, key=len, reverse=True)
+    # sortedSubstrings.reverse()
+    return sortedSubstrings
+
+# calculate savedCost for a list of substrings
+def calcSavedCost(bestSubList, target, intermediateNodes):
+    savedCostList = []
+    for substring in bestSubList:
+        substringOccurences = target.count(substring)
+        # print(substringOccurences)
+        for intNode in intermediateNodes:
+            if intNode.count(substring):
+                substringOccurences = substringOccurences 
+                + intNode.count(substring)
+        # savedCost is occurences multiplied by length of substring - 1
+        savedCost = substringOccurences * (len(substring) - 1)
+        savedCostList.append(savedCost)
+    # returns a parallel list of values
+    return savedCostList
+
+def insertIntermediateNodes(lexisDagObject, sortedList, target):
+
+    # create node
+    intList = []
+    # set initial int node set
+    lexisDagObject.setIntermediateNodes(intList)
+
+    # pointing to target
+    for node in sortedList:
+        occurences = [m.start() for m in re.finditer(node, target)]
+        entry = { node : occurences}
+        intList.append(entry)
+        # original edge cost of substring
+        originalCost = len(occurences) * (len(node))
+        # cost of adding the intermediate node
+        newCost = len(occurences) + (len(node))
+        difference = originalCost - newCost
+        # update edge cost for DAG
+        lexisDagObject.setEdgeCost(lexisDagObject.getEdgeCost() - difference)
+
+        # edge cost in other int nodes
+        otherIntNodes = lexisDagObject.getIntermediateNodes()
+        # for otherNode in otherIntNodes:
+        #     print("othernode: " + str(otherNode))
+        #     # if substring is part of other int nodes
+        #         # update edges
+
+        #         # update edge cost
+
+
+    # print(intList)
+    
+    # update edge cost (target)
+    # add edges to construct node as edges to the target
+
+    # udpate edge cost (current int nodes)
+
+
+    # TODO edges to other int nodes
+    lexisDagObject.setIntermediateNodes(intList)
+
+
+    return
+
+
 main()
