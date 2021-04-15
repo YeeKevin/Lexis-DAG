@@ -150,23 +150,19 @@ def repeatedSubstrings(target):
 
     return str(allSubstrings)
 
-# function that set best costed(1st layer) as an index in order to find best costed(2nd to last layer)
-# paper target="aabcaabdaabc", best costed(1st layer) = "aab", continue to find if there is any best costed
-# therefore, find best the 2nd best costed(2nd layer = "aabc"
+# function that set best cost(1st layer) as an index in order to find best cost(2nd to last layer)
+# paper target="aabcaabdaabc", best cost(1st layer) = "aab", continue to find if there is any best cost
+# therefore, find best the 2nd best cost(2nd layer) = "aabc"
 def getSubstrings(target, index):
     Lt = len(target)
-    # stemp = the best costed one
     stemp = ""
     ctemp = 0
-    result = 0
-    templist = []
     maxstep = int(Lt/2) + 1
     for step in range(2, maxstep):
         for i in range(0, Lt):
             if i+step == Lt+1:
-               break
+                break
             sub = target[i: i+step]
-            templist.append(sub)
             R = 0
             slen = 1
             j = 0
@@ -189,15 +185,15 @@ def getSubstrings(target, index):
     else:
         if index == 0:
             bestSubList.append(stemp)
-        # if there is only one best costed substring, it will directly displayed
+        # if there is only one best cost substring, it will directly displayed
         else:
             t = stemp.replace(str(index-1), bestSubList[index-1])
             bestSubList.append(t)
-        # "aab"(1st best costed) now is represented as index(0) in order to code easily, 
-        # so if there is one more layer for best costed, combining them here, 
-        # "0c" = "aab"(0) + "c". So, the final best costed one is "aabc".
+        # "aab"(1st best cost) now is represented as index(0) in order to code easily, 
+        # so if there is one more layer for best cost, combining them here, 
+        # "0c" = "aab"(0) + "c". So, the final best cost one is "aabc".
         target = target.replace(stemp, str(index))
         index += 1
         getSubstrings(target, index)
-        
+    
 main()
