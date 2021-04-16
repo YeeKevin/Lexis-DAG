@@ -3,7 +3,7 @@
 
 from Bio import SeqIO               # processing .fasta format
 from itertools import combinations  # enumerating substrings
-import re
+import re                           # regex
 
 # Global constants
 MIN_OUT_DEGREE = 2      
@@ -70,7 +70,7 @@ class LexisDag:
         return self.__edgeCost
         
     def __str__(self):
-        dag_string = "\nTarget: \n" + str(self.__target) + \
+        dag_string = "Target: \n" + str(self.__target) + \
                      "\nSource: \n" + str(self.__source) + \
                      "\nEdge Cost: " + str(self.__edgeCost)
         return dag_string
@@ -93,6 +93,7 @@ def main():
             break
 
     # work with first target
+    print("First sequence-")
     print(lexisDags[0])
     # all substrings
     target = str(lexisDags[0].getTarget())
@@ -105,6 +106,8 @@ def main():
     
     # set test dataset as paper did, can put any dataset string in it
     getSubstrings(target, 0)
+    print()
+    print("Substrings of first sequence-")
     print(bestSubList)
 
     # longest substring for experiment
@@ -113,23 +116,24 @@ def main():
     # Lexis-G
     # parallel list of savedCost values
     savedCostList = calcSavedCost(bestSubList, target, [])
+    print("SavedCost of first sequence-")
     print(savedCostList)
 
     # sorting from most saved cost
     zippedSubstrings = zip(savedCostList, bestSubList)
     sortedZippedSubstrings = sorted(zippedSubstrings, reverse=True)
-    # print(sortedZippedSubstrings)
 
     # substrings sorted from highest to lowest savedCost
     sortedList = [element for _,element in sortedZippedSubstrings]
+    print("Substrings by SavedCost-")
     print(sortedList)
 
     # TODO insert intermediate nodes
     insertIntermediateNodes(lexisDags[0], sortedList, target)
 
+    print("Inserted intermediate nodes-")
     print(lexisDags[0].getIntermediateNodes())
-    print("New Edge Cost: " + str(lexisDags[0].getEdgeCost()))
-
+    print("New Edge Cost for first sequence: " + str(lexisDags[0].getEdgeCost()))
                 
 # create new Lexis-Dag and append to dagList
 def initializeNewDag(target, dagList):
